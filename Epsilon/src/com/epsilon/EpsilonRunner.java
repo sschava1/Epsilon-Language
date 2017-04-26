@@ -41,6 +41,17 @@ public class EpsilonRunner {
 			e.printStackTrace();
 			System.out.println("\n Exception caught"+ e.toString());
 		}			
+		walker.walk(listener, tree); 
 		
+		try {
+			PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
+			for (int i = 1; i < listener.op.size(); i++) {
+				writer.println(listener.op.get(i));
+			}
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Exception caught"+ e.toString());
+		}
 	}
 }
