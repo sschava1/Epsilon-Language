@@ -5,13 +5,6 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 public class EpsilonListenerImplementation extends EpsilonBaseListener{
 
-	List<String> ind = new ArrayList<String>();	
-	Stack<Integer> loopStart = new Stack<Integer>();
-	Stack<Integer> loopCondition = new Stack<Integer>();
-	Stack<Integer> ifElseCount = new Stack<Integer>();
-	Stack<Integer> ifElseCondition = new Stack<Integer>();
-	Stack<Integer> ifElseEnd = new Stack<Integer>();
-	
 	int mainCnt = 0;
 	int lineCount = 1;
 	
@@ -209,6 +202,101 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener{
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	
+	@Override 
+	public void enterIdentifierDeclarationAssignment(@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
+		
+	}
+
+	@Override 
+	public void exitIdentifierDeclarationAssignment(@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
+		lineCount++;
+		ind.add("SAVE " + ctx.IDENTIFIER());
+	}
+	@Override 
+	public void enterIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) { 
+		
+	}
+	@Override 
+	public void exitIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) { 
+		lineCount++;
+		ind.add("SAVE " + ctx.IDENTIFIER());
+	}
+
+	@Override public void enterExpression(@NotNull EpsilonParser.ExpressionContext ctx) { 
+		
+	
+	}
+
+	@Override public void exitExpression(@NotNull EpsilonParser.ExpressionContext ctx) { 
+		
+		lineCount++;
+		if(ctx.ADD()!=null){
+			ind.add("ADD");
+		}
+		else if(ctx.SUB() != null){
+			ind.add("SUB");
+		}
+		else if(ctx.MUL() != null){
+			ind.add("MUL");
+		}
+		else if(ctx.DIV()!= null){
+			ind.add("DIV");
+		}
+		else if(ctx.POWER() != null){
+			ind.add("POW");
+		}
+				
+	}
+	
+	@Override 
+	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
+		
+		lineCount++;
+		if(ctx.LOGICAND() != null){
+			ind.add("AND");
+		}
+		else if(ctx.LOGICNOT() != null){
+			ind.add("NOT");
+		}
+		else if(ctx.LOGICOR()!=null){
+			ind.add("OR");
+		}
+		else if(ctx.COMPARATORS()!=null){
+			switch(ctx.COMPARATORS().toString()){
+			case ">":
+				ind.add("GREATER");
+				break;
+			case "<":
+				ind.add("LESSER");
+				break;
+			case ">=":
+				ind.add("GREATEREQUAL");
+				break;
+			case "<=":
+				ind.add("LESSEREQUAL");
+				break;
+			case "==":
+				ind.add("EQUALS");
+				break;	
+}
+		}
+	}
+
+	@Override 
+	public void exitBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) { 
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
