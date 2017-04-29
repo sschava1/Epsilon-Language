@@ -192,6 +192,27 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
+	
+	@Override public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+	}
+	
+	@Override public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		lineCount++;
+		ind.add("PUSH True");		
+		ind.add("CONDTRUEGOTO " + loopStart.pop());
+		Integer pos = loopCondition.pop();
+		String prev = ind.get(pos);
+		prev += " " + (lineCount + 1);
+		ind.set(pos, prev);
+		lineCount++;
+	}
+	
+	@Override public void exitWhilePrefix(@NotNull EpsilonParser.WhilePrefixContext ctx) {
+		loopCondition.push(lineCount);
+		ind.add("CONDFALSEGOTO");
+		lineCount++;
+	}
 
 	@Override
 	public void enterIdentifierDeclarationAssignment(
