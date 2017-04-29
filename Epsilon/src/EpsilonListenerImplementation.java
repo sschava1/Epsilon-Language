@@ -19,24 +19,24 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener{
 	
 	@Override
 	public void exitStart(@NotNull EpsilonParser.StartContext ctx) {
-		ind.add("EXIT");
+		ind.add("EXIT ");
 	}
 	
 	@Override 
 	public void exitPrint(@NotNull EpsilonParser.PrintContext ctx) { 
 		lineCount++;
-		ind.add("PRINT");
+		ind.add("PRINT ");
 	}
 	
 	@Override 
 	public void enterDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) { 
 		lineCount++;
-		ind.add("DEFN" + ctx.IDENTIFIER());
+		ind.add("DEFN " + ctx.IDENTIFIER());
 		if(ctx.definitionParameters().identifierDeclaration() != null){
 			for(EpsilonParser.IdentifierDeclarationContext obj : ctx.definitionParameters().identifierDeclaration()){
 				System.out.println(obj.IDENTIFIER());
 				lineCount++;
-				ind.add("SAVE" + obj.IDENTIFIER());
+				ind.add("SAVE " + obj.IDENTIFIER());
 			}
 		}		
 	}
@@ -44,27 +44,27 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener{
 	@Override 
 	public void exitDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) {
 		lineCount++;
-		ind.add("EXITDEFN");
+		ind.add("EXITDEFN ");
 	}
 	
 	@Override 
 	public void exitDefinitionInvocation(@NotNull EpsilonParser.DefinitionInvocationContext ctx) {
 		lineCount++;
 		System.out.println(ctx.IDENTIFIER());
-		ind.add("INVOKE" + ctx.IDENTIFIER());
+		ind.add("INVOKE " + ctx.IDENTIFIER());
 	}
 	
 	@Override 
 	public void enterDataType(@NotNull EpsilonParser.DataTypeContext ctx) {
 		lineCount++;
 		if(ctx.NUMERIC() != null){
-			ind.add("PUSH" + ctx.NUMERIC());
+			ind.add("PUSH " + ctx.NUMERIC());
 		}
 		else if (ctx.BOOL()!=null) {
-			ind.add("PUSH" + ctx.BOOL());
+			ind.add("PUSH " + ctx.BOOL());
 		}
 		else{
-			ind.add("PUSH" + ctx.IDENTIFIER());
+			ind.add("PUSH " + ctx.IDENTIFIER());
 		}
 	}
 	
@@ -72,13 +72,13 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener{
 	public void exitDefinitionReturn(@NotNull EpsilonParser.DefinitionReturnContext ctx) {
 		lineCount++;
 		if(ctx.IDENTIFIER()!=null){
-			ind.add("RETURN" + ctx.IDENTIFIER());
+			ind.add("RETURN " + ctx.IDENTIFIER());
 		}
 		else if (ctx.NUMERIC()!=null) {
-			ind.add("RETURN" + ctx.NUMERIC());
+			ind.add("RETURN " + ctx.NUMERIC());
 		}
 		else if (ctx.BOOL() != null) {
-			ind.add("RETURN" + ctx.BOOL());
+			ind.add("RETURN " + ctx.BOOL());
 		}
 		else
 		{

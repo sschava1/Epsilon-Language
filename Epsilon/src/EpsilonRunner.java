@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
  */
 public class EpsilonRunner {
 	public static void main(String[] args) throws Exception {	
-	//to take  file as input
+//		to take  file as input
 //		FileInputStream fileInputStream = new FileInputStream(args[0]);		
 //		ANTLRInputStream input = new ANTLRInputStream(fileInputStream);
 
@@ -40,7 +40,7 @@ public class EpsilonRunner {
 //			writer.close();
 			
 			System.out.println(tree.toStringTree(parser));	
-		//	listener.enterDefinitionDeclaration(ctx);
+//			listener.enterDefinitionDeclaration(ctx);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
