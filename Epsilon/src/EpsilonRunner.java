@@ -1,4 +1,4 @@
-package com.epsilon;
+
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 
@@ -23,14 +23,14 @@ public class EpsilonRunner {
 		FileInputStream fileInputStream = new FileInputStream(args[0]);		
 		ANTLRInputStream input = new ANTLRInputStream(fileInputStream);
 
-		HelloLexer lexer = new HelloLexer(input);
+		EpsilonLexer lexer = new EpsilonLexer(input);
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-		HelloParser parser = new HelloParser(tokens);		
+		EpsilonParser parser = new EpsilonParser(tokens);		
 		ParserRuleContext tree = parser.start();
 		ParseTreeWalker walker = new ParseTreeWalker(); // parse tree walker object
-		NewListener listener = new NewListener();
+		EpsilonListenerImplementation listener = new EpsilonListenerImplementation();
 		
 		try {
 			PrintWriter writer = new PrintWriter("parseTree.pt", "UTF-8");
@@ -45,9 +45,9 @@ public class EpsilonRunner {
 		
 		try {
 			PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
-			for (int i = 1; i < listener.op.size(); i++) {
-				writer.println(listener.op.get(i));
-			}
+//			for (int i = 1; i < listener.op.size(); i++) {
+//				writer.println(listener.op.get(i));
+//			}
 			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
