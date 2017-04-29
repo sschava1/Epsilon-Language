@@ -62,26 +62,33 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void enterDataType(@NotNull EpsilonParser.DataTypeContext ctx) {
-		lineCount++;
+		
 		if (ctx.NUMERIC() != null) {
+			lineCount++;
 			ind.add("PUSH " + ctx.NUMERIC());
 		} else if (ctx.BOOL() != null) {
+			lineCount++;
 			ind.add("PUSH " + ctx.BOOL());
 		} else {
+			lineCount++;
 			ind.add("PUSH " + ctx.IDENTIFIER());
 		}
 	}
 
 	@Override
 	public void exitDefinitionReturn(@NotNull EpsilonParser.DefinitionReturnContext ctx) {
-		lineCount++;
+		
 		if (ctx.IDENTIFIER() != null) {
+			lineCount++;
 			ind.add("RETURN " + ctx.IDENTIFIER());
 		} else if (ctx.NUMERIC() != null) {
+			lineCount++;
 			ind.add("RETURN " + ctx.NUMERIC());
 		} else if (ctx.BOOL() != null) {
+			lineCount++;
 			ind.add("RETURN " + ctx.BOOL());
 		} else {
+			lineCount++;
 			ind.add("SAVE temp");
 			lineCount++;
 			ind.add("RETURN temp");
@@ -92,54 +99,14 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 	@Override
 	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 
 	@Override
 	public void enterIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-<<<<<<< HEAD
-	@Override
-	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-	@Override
-	public void enterPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
-	}
-
-=======
-	@Override 
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 		Integer count = ifElseCount.pop();
 		for(int i=0;i<count;i++){
@@ -152,42 +119,8 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	
 	@Override 
 	public void enterPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) { }
->>>>>>> 537582798b07e334182a98983e80c0df006bb57e
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-<<<<<<< HEAD
-	@Override
-	public void exitPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
-	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-	@Override
-	public void enterIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
-	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-	@Override
-	public void exitIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
-	}
-
-=======
 	@Override 
 	public void exitPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
 		ind.add("CONDFALSEGOTO");
@@ -213,29 +146,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 		}
 	
->>>>>>> 537582798b07e334182a98983e80c0df006bb57e
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-<<<<<<< HEAD
-	@Override
-	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-	@Override
-	public void exitElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
-=======
 	@Override 
 	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
 		Integer cur = ifElseCount.pop();
@@ -253,42 +163,13 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		prev += " " + (lineCount + 1);
 		ind.set(pos, prev);
 		lineCount++;		
->>>>>>> 537582798b07e334182a98983e80c0df006bb57e
 	}
-	/*
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-
+	
 	@Override
 	public void enterPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-<<<<<<< HEAD
-	@Override
-	public void exitPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
-	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-	@Override
-	public void enterElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) {
-	}
-
-=======
 	@Override 
 	public void exitPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
 		ind.add("CONDFALSEGOTO");
@@ -298,48 +179,19 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	
 	@Override 
 	public void enterElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) { }
->>>>>>> 537582798b07e334182a98983e80c0df006bb57e
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
+
 	@Override
 	public void exitElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-
+	
 	@Override
 	public void enterMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 	@Override
 	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 
 	@Override
 	public void enterIdentifierDeclarationAssignment(
@@ -372,54 +224,84 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitExpression(@NotNull EpsilonParser.ExpressionContext ctx) {
 
-		lineCount++;
-		if (ctx.ADD() != null) {
-			ind.add("ADD");
-		} else if (ctx.SUB() != null) {
-			ind.add("SUB");
-		} else if (ctx.MUL() != null) {
-			ind.add("MUL");
-		} else if (ctx.DIV() != null) {
-			ind.add("DIV");
-		} else if (ctx.POWER() != null) {
-			ind.add("POW");
+		if(ctx.NUMERIC()!= null){
+			lineCount++;
+			ind.add("PUSH "+ ctx.NUMERIC());
 		}
+
+		if (ctx.FLOAT() != null){
+			lineCount++;
+			ind.add("PUSH "+ ctx.FLOAT());
+		}
+
+		if(ctx.IDENTIFIER() != null) {
+			lineCount++;
+			ind.add("PUSH "+ ctx.IDENTIFIER());
+		}	
+		if(ctx.ADD() != null) {
+			lineCount++;
+			ind.add("ADD");
+		} 
+		if (ctx.SUB() != null) {
+			lineCount++;
+			ind.add("SUB");
+		} 
+		if (ctx.MUL() != null) {
+			lineCount++;
+			ind.add("MUL");
+		}
+		if (ctx.DIV() != null) {
+			lineCount++;
+			ind.add("DIV");
+		}
+		if (ctx.POWER() != null) {
+			lineCount++;
+			ind.add("POW");
+		}	
 
 	}
 
 	@Override
 	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 
-		lineCount++;
-		if (ctx.LOGICAND() != null) {
-			ind.add("AND");
-		} else if (ctx.LOGICNOT() != null) {
-			ind.add("NOT");
-		} else if (ctx.LOGICOR() != null) {
-			ind.add("OR");
-		} else if (ctx.COMPARATORS() != null) {
-			switch (ctx.COMPARATORS().toString()) {
-			case ">":
-				ind.add("GREATER");
-				break;
-			case "<":
-				ind.add("LESSER");
-				break;
-			case ">=":
-				ind.add("GREATEREQUAL");
-				break;
-			case "<=":
-				ind.add("LESSEREQUAL");
-				break;
-			case "==":
-				ind.add("EQUALS");
-				break;
-			}
-		}
+	
 	}
 
 	@Override
 	public void exitBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
+		if (ctx.LOGICAND() != null) {
+			lineCount++;
+			ind.add("AND");
+		} else if (ctx.LOGICNOT() != null) {
+			lineCount++;
+			ind.add("NOT");
+		} else if (ctx.LOGICOR() != null) {
+			lineCount++;
+			ind.add("OR");
+		} else if (ctx.COMPARATORS() != null) {
+			switch (ctx.COMPARATORS().toString()) {
+			case ">":
+				lineCount++;
+				ind.add("GREATER");
+				break;
+			case "<":
+				lineCount++;
+				ind.add("LESSER");
+				break;
+			case ">=":
+				lineCount++;
+				ind.add("GREATEREQUAL");
+				break;
+			case "<=":
+				lineCount++;
+				ind.add("LESSEREQUAL");
+				break;
+			case "=":
+				lineCount++;
+				ind.add("EQUALS");
+				break;
+			}
+		}
 
 	}
 

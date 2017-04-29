@@ -40,6 +40,9 @@ public class EpsilonRunner {
 //			writer.close();
 			
 			System.out.println(tree.toStringTree(parser));	
+			
+			
+			
 //			listener.enterDefinitionDeclaration(ctx);
 			
 		} catch (Exception e) {
