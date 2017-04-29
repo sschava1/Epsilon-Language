@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
@@ -98,39 +99,14 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 	@Override
 	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 
 	@Override
 	public void enterIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-
-	
-	
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 		Integer count = ifElseCount.pop();
 		for(int i=0;i<count;i++){
@@ -169,14 +145,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.set(pos, prev);
 		lineCount++;
 		}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-
+	
 	@Override 
 	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
 		Integer cur = ifElseCount.pop();
@@ -195,12 +164,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.set(pos, prev);
 		lineCount++;		
 	}
-	/*
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-
+	
 	@Override
 	public void enterPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
 	}
@@ -215,47 +179,19 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	
 	@Override 
 	public void enterElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
+
 	@Override
 	public void exitElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
-
+	
 	@Override
 	public void enterMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 	@Override
 	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>
-	 * The default implementation does nothing.
-	 * </p>
-	 */
 
 	@Override
 	public void enterIdentifierDeclarationAssignment(
@@ -288,23 +224,40 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitExpression(@NotNull EpsilonParser.ExpressionContext ctx) {
 
-		if (ctx.ADD() != null) {
+		if(ctx.NUMERIC()!= null){
+			lineCount++;
+			ind.add("PUSH "+ ctx.NUMERIC());
+		}
+
+		if (ctx.FLOAT() != null){
+			lineCount++;
+			ind.add("PUSH "+ ctx.FLOAT());
+		}
+
+		if(ctx.IDENTIFIER() != null) {
+			lineCount++;
+			ind.add("PUSH "+ ctx.IDENTIFIER());
+		}	
+		if(ctx.ADD() != null) {
 			lineCount++;
 			ind.add("ADD");
-		} else if (ctx.SUB() != null) {
+		} 
+		if (ctx.SUB() != null) {
 			lineCount++;
 			ind.add("SUB");
-		} else if (ctx.MUL() != null) {
+		} 
+		if (ctx.MUL() != null) {
 			lineCount++;
 			ind.add("MUL");
-		} else if (ctx.DIV() != null) {
+		}
+		if (ctx.DIV() != null) {
 			lineCount++;
 			ind.add("DIV");
-		} else if (ctx.POWER() != null) {
+		}
+		if (ctx.POWER() != null) {
 			lineCount++;
 			ind.add("POW");
-		}
-	
+		}	
 
 	}
 
@@ -312,6 +265,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 
 	
+	}
+
+	@Override
+	public void exitBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 		if (ctx.LOGICAND() != null) {
 			lineCount++;
 			ind.add("AND");
@@ -345,10 +302,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 				break;
 			}
 		}
-	}
-
-	@Override
-	public void exitBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 
 	}
 
