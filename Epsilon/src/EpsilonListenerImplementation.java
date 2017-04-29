@@ -122,6 +122,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	 * The default implementation does nothing.
 	 * </p>
 	 */
+<<<<<<< HEAD
 	@Override
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 	}
@@ -137,6 +138,21 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
 	}
 
+=======
+	@Override 
+	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
+		Integer count = ifElseCount.pop();
+		for(int i=0;i<count;i++){
+			Integer pos = ifElseEnd.pop();
+			String prev = ind.get(pos);
+			prev += " " + (lineCount);
+			ind.set(pos, prev);			
+		}
+	}
+	
+	@Override 
+	public void enterPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) { }
+>>>>>>> 537582798b07e334182a98983e80c0df006bb57e
 	/**
 	 * {@inheritDoc}
 	 *
@@ -144,6 +160,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	 * The default implementation does nothing.
 	 * </p>
 	 */
+<<<<<<< HEAD
 	@Override
 	public void exitPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
 	}
@@ -170,6 +187,33 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
 	}
 
+=======
+	@Override 
+	public void exitPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
+		ind.add("CONDFALSEGOTO");
+		ifElseCondition.push(lineCount);
+		lineCount++;
+	}
+	
+	@Override 
+	public void enterIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
+		ifElseCount.push(1);
+	}
+	
+	@Override 
+	public void exitIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
+		lineCount++;
+		ind.add("PUSH True");		
+		ind.add("CONDTRUEGOTO");
+		ifElseEnd.add(lineCount);		
+		Integer pos = ifElseCondition.pop();
+		String prev = ind.get(pos);
+		prev += " " + (lineCount + 1);
+		ind.set(pos, prev);
+		lineCount++;
+		}
+	
+>>>>>>> 537582798b07e334182a98983e80c0df006bb57e
 	/**
 	 * {@inheritDoc}
 	 *
@@ -177,6 +221,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	 * The default implementation does nothing.
 	 * </p>
 	 */
+<<<<<<< HEAD
 	@Override
 	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
 	}
@@ -190,6 +235,25 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	 */
 	@Override
 	public void exitElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
+=======
+	@Override 
+	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
+		Integer cur = ifElseCount.pop();
+    	ifElseCount.push(1 + cur);
+	}
+	
+	@Override 
+	public void exitElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) { 
+		lineCount++;
+		ind.add("PUSH True");		
+		ifElseEnd.add(lineCount);
+		ind.add("CONDTRUEGOTO");
+		Integer pos = ifElseCondition.pop();
+		String prev = ind.get(pos);
+		prev += " " + (lineCount + 1);
+		ind.set(pos, prev);
+		lineCount++;		
+>>>>>>> 537582798b07e334182a98983e80c0df006bb57e
 	}
 	/*
 	 * {@inheritDoc}
@@ -208,6 +272,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	 * The default implementation does nothing.
 	 * </p>
 	 */
+<<<<<<< HEAD
 	@Override
 	public void exitPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
 	}
@@ -223,6 +288,17 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) {
 	}
 
+=======
+	@Override 
+	public void exitPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
+		ind.add("CONDFALSEGOTO");
+		ifElseCondition.push(lineCount);		
+		lineCount++;
+	}
+	
+	@Override 
+	public void enterElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) { }
+>>>>>>> 537582798b07e334182a98983e80c0df006bb57e
 	/**
 	 * {@inheritDoc}
 	 *
