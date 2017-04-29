@@ -20,9 +20,10 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 public class EpsilonRunner {
 	public static void main(String[] args) throws Exception {	
 	//to take  file as input
-		FileInputStream fileInputStream = new FileInputStream(args[0]);		
-		ANTLRInputStream input = new ANTLRInputStream(fileInputStream);
+//		FileInputStream fileInputStream = new FileInputStream(args[0]);		
+//		ANTLRInputStream input = new ANTLRInputStream(fileInputStream);
 
+		ANTLRInputStream input = new ANTLRInputStream(System.in);
 		EpsilonLexer lexer = new EpsilonLexer(input);
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -33,10 +34,14 @@ public class EpsilonRunner {
 		EpsilonListenerImplementation listener = new EpsilonListenerImplementation();
 		
 		try {
-			PrintWriter writer = new PrintWriter("parseTree.pt", "UTF-8");
-			writer.println(tree);	
-			writer.println(tree.toStringTree(parser));			
-			writer.close();
+//			PrintWriter writer = new PrintWriter("parseTree.pt", "UTF-8");
+//			writer.println(tree);	
+//			writer.println(tree.toStringTree(parser));			
+//			writer.close();
+			
+			System.out.println(tree.toStringTree(parser));	
+		//	listener.enterDefinitionDeclaration(ctx);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("\n Exception caught"+ e.toString());
@@ -44,11 +49,12 @@ public class EpsilonRunner {
 		walker.walk(listener, tree); 
 		
 		try {
-			PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
+			//PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
 //			for (int i = 1; i < listener.op.size(); i++) {
 //				writer.println(listener.op.get(i));
 //			}
-			writer.close();
+			//writer.close();
+			System.out.println(listener.ind);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Exception caught"+ e.toString());
