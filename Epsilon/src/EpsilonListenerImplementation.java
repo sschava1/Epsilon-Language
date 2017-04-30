@@ -319,6 +319,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 	}
 
+	@Override public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+	}
+	
 	@Override
 	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 	}
@@ -372,5 +376,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 		ind.add("EXITDEFN main");
 	}
+	
 	
 }
