@@ -4,22 +4,21 @@ import java.util.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 public class EpsilonListenerImplementation extends EpsilonBaseListener {
-	
+
 	int mainCnt = 0;
-	int counter = 1;
+	int counter = 0;
 	List<String> list = new ArrayList<String>();
 
 	// -----------------Main method Construct--------------
 	@Override
 	public void enterMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) {
-
-		counter++;
+		counter += 1;
 		list.add("DEFN main");
 	}
 
 	@Override
 	public void exitMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("EXITDEFN main");
 	}
 
@@ -48,7 +47,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
-		counter++;
+		counter += 1;
 		numberOfifElseEnd.add(counter);
 		int elementAt = numberOfifElseCondition.pop();
 		String prevElement = list.get(elementAt);
@@ -64,6 +63,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void enterStart(@NotNull EpsilonParser.StartContext ctx) {
 		if (mainCnt < 1) {
+			counter += 1;
 			list.add("");
 			mainCnt++;
 		}
@@ -76,30 +76,30 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void exitIdentifierDeclarationAssignment(@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("SAVE " + ctx.IDENTIFIER());
 	}
 
 	@Override
 	public void exitIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("SAVE " + ctx.IDENTIFIER());
 	}
 
 	@Override
 	public void exitPrint(@NotNull EpsilonParser.PrintContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("PRINT ");
 	}
 
 	// -------------- METHODS/FUNCTION constructs---------------------------
 	@Override
 	public void enterDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("DEFN " + ctx.IDENTIFIER());
 		if (ctx.definitionParameters().identifierDeclaration() != null) {
 			for (EpsilonParser.IdentifierDeclarationContext obj : ctx.definitionParameters().identifierDeclaration()) {
-				counter++;
+				counter += 1;
 				list.add("SAVE " + obj.IDENTIFIER());
 			}
 		}
@@ -107,7 +107,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void exitDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("EXITDEFN " + ctx.IDENTIFIER());
 	}
 
@@ -115,34 +115,33 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitDefinitionReturn(@NotNull EpsilonParser.DefinitionReturnContext ctx) {
 
 		if (ctx.IDENTIFIER() != null) {
-			counter++;
+			counter += 1;
 			list.add("RETURN " + ctx.IDENTIFIER());
 		} else if (ctx.NUMERIC() != null) {
-			counter++;
+			counter += 1;
 			list.add("RETURN " + ctx.NUMERIC());
 		} else if (ctx.BOOL() != null) {
-			counter++;
-			list.add("RETURN " + ctx.BOOL());	
-		}else if (ctx.STRING() != null) {
-			counter++;
-			list.add("RETURN " + ctx.STRING());		
+			counter += 1;
+			list.add("RETURN " + ctx.BOOL());
+		} else if (ctx.STRING() != null) {
+			counter += 1;
+			list.add("RETURN " + ctx.STRING());
+		} else if (ctx.CHARACTER() != null) {
+			counter += 1;
+			list.add("RETURN " + ctx.CHARACTER());
 		}
-		else if (ctx.CHARACTER() != null) {
-			counter++;
-			list.add("RETURN " + ctx.CHARACTER());		
-		}
-		//recursion case
+		// recursion case
 		else {
-			counter++;
+			counter += 1;
 			list.add("SAVE temp");
-			counter++;
+			counter += 1;
 			list.add("RETURN temp");
 		}
 	}
 
 	@Override
 	public void exitDefinitionInvocation(@NotNull EpsilonParser.DefinitionInvocationContext ctx) {
-		counter++;
+		counter += 1;
 		list.add("INVOKE " + ctx.IDENTIFIER());
 	}
 	// ------------------End of function construct------------
@@ -152,13 +151,19 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterDataType(@NotNull EpsilonParser.DataTypeContext ctx) {
 
 		if (ctx.NUMERIC() != null) {
-			counter++;
+			counter += 1;
 			list.add("PUSH " + ctx.NUMERIC());
 		} else if (ctx.BOOL() != null) {
-			counter++;
+			counter += 1;
 			list.add("PUSH " + ctx.BOOL());
+		} else if (ctx.STRING() != null) {
+			counter += 1;
+			list.add("RETURN " + ctx.STRING());
+		} else if (ctx.CHARACTER() != null) {
+			counter += 1;
+			list.add("RETURN " + ctx.CHARACTER());
 		} else {
-			counter++;
+			counter += 1;
 			list.add("PUSH " + ctx.IDENTIFIER());
 		}
 	}
@@ -175,7 +180,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
-		numberOfIfElses.push(1 + numberOfIfElses.pop());
+		numberOfIfElses.push(numberOfIfElses.pop() + 1);
 	}
 
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
@@ -184,7 +189,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		while (i < numberOfIfElse) {
 			int elementAt = numberOfifElseEnd.pop();
 			String previousElement = list.get(elementAt);
-			previousElement += " " + (counter);
+			previousElement = previousElement + (" " + (counter));
 			list.set(elementAt, previousElement);
 			i++;
 		}
@@ -194,40 +199,40 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
 		list.add("CONDFALSEGOTO");
 		numberOfifElseCondition.push(counter);
-		counter++;
+		counter += 1;
 	}
 
 	@Override
 	public void exitPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
 		list.add("CONDFALSEGOTO");
 		numberOfifElseCondition.push(counter);
-		counter++;
+		counter += 1;
 	}
 
 	@Override
 	public void exitIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
-		counter++;
+		counter += 1;
 		numberOfifElseEnd.add(counter);
-		Integer eleAt = numberOfifElseCondition.pop();
+		int eleAt = numberOfifElseCondition.pop();
 		String prevElement = list.get(eleAt);
 		prevElement = prevElement + (" " + (counter + 1));
 		list.set(eleAt, prevElement);
 		list.add("PUSH True");
 		list.add("CONDTRUEGOTO");
-		counter++;
+		counter += 1;
 	}
 
 	@Override
 	public void exitElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
-		counter++;
-		Integer elementAt = numberOfifElseCondition.pop();
+		counter += 1;
+		int elementAt = numberOfifElseCondition.pop();
 		String previousElement = list.get(elementAt);
-		previousElement = previousElement + ( " " + (counter + 1));
+		previousElement = previousElement + (" " + (counter + 1));
 		list.set(elementAt, previousElement);
 		list.add("PUSH True");
 		numberOfifElseEnd.add(counter);
 		list.add("CONDTRUEGOTO");
-		counter++;
+		counter += 1;
 	}
 
 	// ------End of IF-ELSE IF-ELSE COnstruct -----------------
@@ -245,19 +250,19 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitWhilePrefix(@NotNull EpsilonParser.WhilePrefixContext ctx) {
 		loopCondition.push(counter);
 		list.add("CONDFALSEGOTO");
-		counter++;
+		counter += 1;
 	}
 
 	@Override
 	public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		counter++;
+		counter += 1;
 		int elementAt = loopCondition.pop();
 		String priorElement = list.get(elementAt);
 		priorElement = priorElement + (" " + (counter + 1));
 		list.set(elementAt, priorElement);
 		list.add("PUSH True");
 		list.add("CONDTRUEGOTO " + loopStart.pop());
-		counter++;
+		counter += 1;
 	}
 
 	// -------------------End of while loop construct------------------
@@ -267,76 +272,83 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitExpression(@NotNull EpsilonParser.ExpressionContext ctx) {
 
 		if (ctx.NUMERIC() != null) {
-			counter++;
+			counter += 1;
 			list.add("PUSH " + ctx.NUMERIC());
 		}
 		if (ctx.FLOAT() != null) {
-			counter++;
+			counter += 1;
 			list.add("PUSH " + ctx.FLOAT());
 		}
 		if (ctx.IDENTIFIER() != null) {
-			counter++;
+			counter += 1;
 			list.add("PUSH " + ctx.IDENTIFIER());
 		}
 		if (ctx.ADD() != null) {
-			counter++;
+			counter += 1;
 			list.add("ADD");
 		}
 		if (ctx.SUB() != null) {
-			counter++;
+			counter += 1;
 			list.add("SUB");
 		}
 		if (ctx.MUL() != null) {
-			counter++;
+			counter += 1;
 			list.add("MUL");
 		}
 		if (ctx.DIV() != null) {
-			counter++;
+			counter += 1;
 			list.add("DIV");
 		}
 		if (ctx.MODULO() != null) {
-			counter++;
+			counter += 1;
 			list.add("MOD");
 		}
 		if (ctx.POWER() != null) {
-			counter++;
+			counter += 1;
 			list.add("POW");
 		}
 
 	}
-	//----------Boolean and comparators-----------------
+
+	// ----------Boolean and comparators-----------------
 	@Override
 	public void exitBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 		if (ctx.LOGICAND() != null) {
-			counter++;
+			counter += 1;
 			list.add("AND");
 		} else if (ctx.LOGICNOT() != null) {
-			counter++;
+			counter += 1;
 			list.add("NOT");
 		} else if (ctx.LOGICOR() != null) {
-			counter++;
+			counter += 1;
 			list.add("OR");
 		} else if (ctx.COMPARATORS() != null) {
 			switch (ctx.COMPARATORS().toString()) {
 			case ">":
-				counter++;
+				counter += 1;
 				list.add("GREATER");
 				break;
 			case "<":
-				counter++;
+				counter += 1;
 				list.add("LESSER");
 				break;
 			case ">=":
-				counter++;
+				counter += 1;
 				list.add("GREATEREQUAL");
 				break;
 			case "<=":
-				counter++;
+				counter += 1;
 				list.add("LESSEREQUAL");
 				break;
 			case "=":
-				counter++;
+				counter += 1;
 				list.add("EQUALS");
+				break;
+			case "!=":
+				counter += 1;
+				list.add("UNEQUALS");
+				break;
+			default:
 				break;
 			}
 		}
