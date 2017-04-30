@@ -4,7 +4,6 @@ import java.util.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 public class EpsilonListenerImplementation extends EpsilonBaseListener {
-
 	
 	List<String> ind = new ArrayList<String>();	
 	Stack<Integer> loopStart = new Stack<Integer>();
@@ -58,6 +57,8 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 		System.out.println(ctx.IDENTIFIER());
 		ind.add("INVOKE " + ctx.IDENTIFIER());
+		lineCount++;
+		ind.add(" "+ctx.parameters());
 	}
 
 	@Override
