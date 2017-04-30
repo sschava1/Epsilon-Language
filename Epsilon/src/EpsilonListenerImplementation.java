@@ -50,7 +50,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) {
 		lineCount++;
-		ind.add("EXITDEFN ");
+		ind.add("EXITDEFN "+ ctx.IDENTIFIER());
 	}
 
 	@Override
@@ -192,27 +192,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
-	
-	@Override public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		loopStart.push(lineCount);
-	}
-	
-	@Override public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		lineCount++;
-		ind.add("PUSH True");		
-		ind.add("CONDTRUEGOTO " + loopStart.pop());
-		Integer pos = loopCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
-		lineCount++;
-	}
-	
-	@Override public void exitWhilePrefix(@NotNull EpsilonParser.WhilePrefixContext ctx) {
-		loopCondition.push(lineCount);
-		ind.add("CONDFALSEGOTO");
-		lineCount++;
-	}
 
 	@Override
 	public void enterIdentifierDeclarationAssignment(
@@ -275,6 +254,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 			lineCount++;
 			ind.add("DIV");
 		}
+		if (ctx.MODULO() != null) {
+			lineCount++;
+			ind.add("MOD");
+		}
 		if (ctx.POWER() != null) {
 			lineCount++;
 			ind.add("POW");
@@ -282,10 +265,32 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	}
 
+	@Override 
+	public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+	}
+	
+	@Override 
+	public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		lineCount++;
+		ind.add("PUSH True");		
+		ind.add("CONDTRUEGOTO " + loopStart.pop());
+		Integer pos = loopCondition.pop();
+		String prev = ind.get(pos);
+		prev += " " + (lineCount + 1);
+		ind.set(pos, prev);
+		lineCount++;
+	}
+	
+	@Override 
+	public void exitWhilePrefix(@NotNull EpsilonParser.WhilePrefixContext ctx) {
+		loopCondition.push(lineCount);
+		ind.add("CONDFALSEGOTO");
+		lineCount++;
+	}
+
 	@Override
 	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
-
-	
 	}
 
 	@Override
@@ -323,7 +328,19 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 				break;
 			}
 		}
-
 	}
 
+	@Override
+	public void enterMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) { 
+		
+		lineCount++;
+		ind.add("DEFN main");
+	}
+	
+	@Override 
+	public void exitMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) {
+		lineCount++;
+		ind.add("EXITDEFN main");
+	}
+	
 }
