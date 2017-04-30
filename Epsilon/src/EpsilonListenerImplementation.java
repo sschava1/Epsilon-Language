@@ -106,10 +106,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.add("PUSH True");		
 		ind.add("CONDTRUEGOTO");
 		ifElseEnd.add(lineCount);		
-		Integer pos = ifElseCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = ifElseCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;
 	}
 
@@ -120,10 +120,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 		Integer count = ifElseCount.pop();
 		for(int i=0;i<count;i++){
-			Integer pos = ifElseEnd.pop();
-			String prev = ind.get(pos);
-			prev += " " + (lineCount);
-			ind.set(pos, prev);			
+			Integer index = ifElseEnd.pop();
+			String previous = ind.get(index);
+			previous += " " + (lineCount);
+			ind.set(index, previous);			
 		}
 	}
 	
@@ -134,10 +134,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) {
 		Integer count = ifElseCount.pop();
 		for(int i=0;i<count;i++){
-			Integer pos = ifElseEnd.pop();
-			String prev = ind.get(pos);
-			prev += " " + (lineCount);
-			ind.set(pos, prev);
+			Integer position = ifElseEnd.pop();
+			String previous = ind.get(position);
+			previous += " " + (lineCount);
+			ind.set(position, previous);
 	}
 	}
 	
@@ -163,10 +163,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.add("PUSH True");		
 		ind.add("CONDTRUEGOTO");
 		ifElseEnd.add(lineCount);		
-		Integer pos = ifElseCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = ifElseCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;
 		}
 	
@@ -182,10 +182,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.add("PUSH True");		
 		ifElseEnd.add(lineCount);
 		ind.add("CONDTRUEGOTO");
-		Integer pos = ifElseCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = ifElseCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;		
 	}
 	
@@ -305,10 +305,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 		ind.add("PUSH True");		
 		ind.add("CONDTRUEGOTO " + loopStart.pop());
-		Integer pos = loopCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = loopCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;
 	}
 	
