@@ -98,10 +98,20 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
+		ifElseCount.push(1);
 	}
 
 	@Override
 	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
+		lineCount++;
+		ind.add("PUSH True");		
+		ind.add("CONDTRUEGOTO");
+		ifElseEnd.add(lineCount);		
+		Integer index = ifElseCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
+		lineCount++;
 	}
 
 	@Override
@@ -111,11 +121,25 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
 		Integer count = ifElseCount.pop();
 		for(int i=0;i<count;i++){
-			Integer pos = ifElseEnd.pop();
-			String prev = ind.get(pos);
-			prev += " " + (lineCount);
-			ind.set(pos, prev);			
+			Integer index = ifElseEnd.pop();
+			String previous = ind.get(index);
+			previous += " " + (lineCount);
+			ind.set(index, previous);			
 		}
+	}
+	
+	@Override
+	public void enterMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) { }
+	
+	@Override
+	public void exitMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) {
+		Integer count = ifElseCount.pop();
+		for(int i=0;i<count;i++){
+			Integer position = ifElseEnd.pop();
+			String previous = ind.get(position);
+			previous += " " + (lineCount);
+			ind.set(position, previous);
+	}
 	}
 	
 	@Override 
@@ -140,10 +164,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.add("PUSH True");		
 		ind.add("CONDTRUEGOTO");
 		ifElseEnd.add(lineCount);		
-		Integer pos = ifElseCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = ifElseCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;
 		}
 	
@@ -159,10 +183,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		ind.add("PUSH True");		
 		ifElseEnd.add(lineCount);
 		ind.add("CONDTRUEGOTO");
-		Integer pos = ifElseCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = ifElseCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;		
 	}
 	
@@ -194,6 +218,15 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
 
+	@Override public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+	}
+	
+	
+	@Override public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+		}
+
 	@Override
 	public void enterIdentifierDeclarationAssignment(
 			@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
@@ -210,6 +243,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
 
 	}
+	
 
 	@Override
 	public void exitIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
@@ -266,20 +300,16 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	}
 
-	@Override 
-	public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		loopStart.push(lineCount);
-	}
 	
 	@Override 
 	public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
 		lineCount++;
 		ind.add("PUSH True");		
 		ind.add("CONDTRUEGOTO " + loopStart.pop());
-		Integer pos = loopCondition.pop();
-		String prev = ind.get(pos);
-		prev += " " + (lineCount + 1);
-		ind.set(pos, prev);
+		Integer index = loopCondition.pop();
+		String previous = ind.get(index);
+		previous += " " + (lineCount + 1);
+		ind.set(index, previous);
 		lineCount++;
 	}
 	
@@ -290,6 +320,10 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 	}
 
+	@Override public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+	}
+	
 	@Override
 	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 	}
@@ -343,5 +377,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 		lineCount++;
 		ind.add("EXITDEFN main");
 	}
+	
 	
 }
