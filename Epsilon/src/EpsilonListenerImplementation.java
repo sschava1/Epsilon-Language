@@ -40,6 +40,24 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 			i++;
 		}
 	}
+	
+	@Override
+	public void exitMainElseIfStatement(@NotNull EpsilonParser.MainElseIfStatementContext ctx) {
+		counter += 1;
+		int elementAt = numberOfifElseCondition.pop();
+		String previousElement = list.get(elementAt);
+		previousElement = previousElement + (" " + (counter + 1));
+		list.set(elementAt, previousElement);
+		list.add("PUSH True");
+		numberOfifElseEnd.add(counter);
+		list.add("CONDTRUEGOTO");
+		counter += 1;
+	}
+	
+	@Override
+	public void enterMainElseIfStatement(@NotNull EpsilonParser.MainElseIfStatementContext ctx) {
+		numberOfIfElses.push(numberOfIfElses.pop() + 1);
+	}
 
 	@Override
 	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
