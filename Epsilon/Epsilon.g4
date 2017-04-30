@@ -16,7 +16,7 @@ definitionParameters : (() |(identifierDeclaration) (',' identifierDeclaration)*
 definitionBody :  (print | definitionReturn | construct | definitionInvocation)* ;
 
 // Main Definition does not return a value
-mainDefinitionBody : (print | definitionInvocation | construct)* ;
+mainDefinitionBody : (print | definitionInvocation | mainConstruct)* ;
 definitionInvocation : IDENTIFIER ('('(parameters)?(',' parameters)*')');
 definitionReturn : 'return' (NUMERIC | BOOL | IDENTIFIER | STRING | CHARACTER | definitionInvocation);
 

@@ -38,7 +38,7 @@ public class EpsilonRunner {
 //			writer.println(tree);	
 //			writer.println(tree.toStringTree(parser));			
 //			writer.close();
-			
+//			
 			System.out.println(tree.toStringTree(parser));	
 			
 			
@@ -52,11 +52,11 @@ public class EpsilonRunner {
 		walker.walk(listener, tree); 
 		
 		try {
-			//PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
-//			for (int i = 1; i < listener.op.size(); i++) {
-//				writer.println(listener.op.get(i));
-//			}
-			//writer.close();
+			PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
+			for (int i = 1; i < listener.ind.size(); i++) {
+				writer.println(listener.ind.get(i));
+			}
+			writer.close();
 			System.out.println(listener.ind);
 		} catch (Exception e) {
 			e.printStackTrace();
