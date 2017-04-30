@@ -55,10 +55,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitDefinitionInvocation(@NotNull EpsilonParser.DefinitionInvocationContext ctx) {
 		lineCount++;
-		System.out.println(ctx.IDENTIFIER());
 		ind.add("INVOKE " + ctx.IDENTIFIER());
-		lineCount++;
-		ind.add(" "+ctx.parameters());
 	}
 
 	@Override
@@ -223,10 +220,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	}
 	
 	
-	@Override public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
-		loopStart.push(lineCount);
-		}
-
 	@Override
 	public void enterIdentifierDeclarationAssignment(
 			@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
