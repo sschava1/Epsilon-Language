@@ -53,11 +53,11 @@ public class EpsilonRunner {
 		
 		try {
 			PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
-			for (int i = 1; i < listener.ind.size(); i++) {
-				writer.println(listener.ind.get(i));
+			for (int i = 1; i < listener.list.size(); i++) {
+				writer.println(listener.list.get(i));
 			}
 			writer.close();
-			System.out.println(listener.ind);
+			System.out.println(listener.list);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Exception caught"+ e.toString());

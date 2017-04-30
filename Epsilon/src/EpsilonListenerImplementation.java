@@ -5,371 +5,341 @@ import org.antlr.v4.runtime.misc.NotNull;
 
 public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	
-	List<String> ind = new ArrayList<String>();	
-	Stack<Integer> loopStart = new Stack<Integer>();
-	Stack<Integer> loopCondition = new Stack<Integer>();
-	Stack<Integer> ifElseCount = new Stack<Integer>();
-	Stack<Integer> ifElseCondition = new Stack<Integer>();
-	Stack<Integer> ifElseEnd = new Stack<Integer>();
 	int mainCnt = 0;
-	int lineCount = 1;
+	int counter = 1;
+	List<String> list = new ArrayList<String>();
 
+	// -----------------Main method Construct--------------
+	@Override
+	public void enterMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) {
+
+		counter++;
+		list.add("DEFN main");
+	}
+
+	@Override
+	public void exitMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) {
+		counter++;
+		list.add("EXITDEFN main");
+	}
+
+	@Override
+	public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
+		loopStart.push(counter);
+	}
+
+	@Override
+	public void exitMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) {
+		int numberOfIfElse = numberOfIfElses.pop();
+		int i = 0;
+		while (i < numberOfIfElse) {
+			int elementAt = numberOfifElseEnd.pop();
+			String prevElement = list.get(elementAt);
+			prevElement = prevElement + (" " + (counter));
+			list.set(elementAt, prevElement);
+			i++;
+		}
+	}
+
+	@Override
+	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
+		numberOfIfElses.push(1);
+	}
+
+	@Override
+	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
+		counter++;
+		numberOfifElseEnd.add(counter);
+		int elementAt = numberOfifElseCondition.pop();
+		String prevElement = list.get(elementAt);
+		prevElement = prevElement + (" " + (counter + 1));
+		list.set(elementAt, prevElement);
+		list.add("PUSH True");
+		list.add("CONDTRUEGOTO");
+		counter++;
+	}
+	// --------------------------End of MAIN construct------------------
+
+	// ----------Start of program, and declarations,assignments---------
 	@Override
 	public void enterStart(@NotNull EpsilonParser.StartContext ctx) {
 		if (mainCnt < 1) {
-			ind.add("");
+			list.add("");
 			mainCnt++;
 		}
 	}
 
 	@Override
 	public void exitStart(@NotNull EpsilonParser.StartContext ctx) {
-		ind.add("EXIT ");
+		list.add("EXIT ");
+	}
+
+	@Override
+	public void exitIdentifierDeclarationAssignment(@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
+		counter++;
+		list.add("SAVE " + ctx.IDENTIFIER());
+	}
+
+	@Override
+	public void exitIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
+		counter++;
+		list.add("SAVE " + ctx.IDENTIFIER());
 	}
 
 	@Override
 	public void exitPrint(@NotNull EpsilonParser.PrintContext ctx) {
-		lineCount++;
-		ind.add("PRINT ");
+		counter++;
+		list.add("PRINT ");
 	}
 
+	// -------------- METHODS/FUNCTION constructs---------------------------
 	@Override
 	public void enterDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) {
-		lineCount++;
-		ind.add("DEFN " + ctx.IDENTIFIER());
+		counter++;
+		list.add("DEFN " + ctx.IDENTIFIER());
 		if (ctx.definitionParameters().identifierDeclaration() != null) {
 			for (EpsilonParser.IdentifierDeclarationContext obj : ctx.definitionParameters().identifierDeclaration()) {
-				System.out.println(obj.IDENTIFIER());
-				lineCount++;
-				ind.add("SAVE " + obj.IDENTIFIER());
+				counter++;
+				list.add("SAVE " + obj.IDENTIFIER());
 			}
 		}
 	}
 
 	@Override
 	public void exitDefinitionDeclaration(@NotNull EpsilonParser.DefinitionDeclarationContext ctx) {
-		lineCount++;
-		ind.add("EXITDEFN "+ ctx.IDENTIFIER());
-	}
-
-	@Override
-	public void exitDefinitionInvocation(@NotNull EpsilonParser.DefinitionInvocationContext ctx) {
-		lineCount++;
-		ind.add("INVOKE " + ctx.IDENTIFIER());
-	}
-
-	@Override
-	public void enterDataType(@NotNull EpsilonParser.DataTypeContext ctx) {
-		
-		if (ctx.NUMERIC() != null) {
-			lineCount++;
-			ind.add("PUSH " + ctx.NUMERIC());
-		} else if (ctx.BOOL() != null) {
-			lineCount++;
-			ind.add("PUSH " + ctx.BOOL());
-		} else {
-			lineCount++;
-			ind.add("PUSH " + ctx.IDENTIFIER());
-		}
+		counter++;
+		list.add("EXITDEFN " + ctx.IDENTIFIER());
 	}
 
 	@Override
 	public void exitDefinitionReturn(@NotNull EpsilonParser.DefinitionReturnContext ctx) {
-		
+
 		if (ctx.IDENTIFIER() != null) {
-			lineCount++;
-			ind.add("RETURN " + ctx.IDENTIFIER());
+			counter++;
+			list.add("RETURN " + ctx.IDENTIFIER());
 		} else if (ctx.NUMERIC() != null) {
-			lineCount++;
-			ind.add("RETURN " + ctx.NUMERIC());
+			counter++;
+			list.add("RETURN " + ctx.NUMERIC());
 		} else if (ctx.BOOL() != null) {
-			lineCount++;
-			ind.add("RETURN " + ctx.BOOL());
-		} else {
-			lineCount++;
-			ind.add("SAVE temp");
-			lineCount++;
-			ind.add("RETURN temp");
+			counter++;
+			list.add("RETURN " + ctx.BOOL());	
+		}else if (ctx.STRING() != null) {
+			counter++;
+			list.add("RETURN " + ctx.STRING());		
+		}
+		else if (ctx.CHARACTER() != null) {
+			counter++;
+			list.add("RETURN " + ctx.CHARACTER());		
+		}
+		//recursion case
+		else {
+			counter++;
+			list.add("SAVE temp");
+			counter++;
+			list.add("RETURN temp");
 		}
 	}
 
 	@Override
-	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
-		ifElseCount.push(1);
+	public void exitDefinitionInvocation(@NotNull EpsilonParser.DefinitionInvocationContext ctx) {
+		counter++;
+		list.add("INVOKE " + ctx.IDENTIFIER());
+	}
+	// ------------------End of function construct------------
+
+	// --------------------Data types------------------------
+	@Override
+	public void enterDataType(@NotNull EpsilonParser.DataTypeContext ctx) {
+
+		if (ctx.NUMERIC() != null) {
+			counter++;
+			list.add("PUSH " + ctx.NUMERIC());
+		} else if (ctx.BOOL() != null) {
+			counter++;
+			list.add("PUSH " + ctx.BOOL());
+		} else {
+			counter++;
+			list.add("PUSH " + ctx.IDENTIFIER());
+		}
+	}
+
+	// ------------------IF-ELSE IF-ELSE Construct----------------------------
+	Stack<Integer> numberOfIfElses = new Stack<Integer>();
+	Stack<Integer> numberOfifElseCondition = new Stack<Integer>();
+	Stack<Integer> numberOfifElseEnd = new Stack<Integer>();
+
+	@Override
+	public void enterIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
+		numberOfIfElses.push(1);
 	}
 
 	@Override
-	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
-		lineCount++;
-		ind.add("PUSH True");		
-		ind.add("CONDTRUEGOTO");
-		ifElseEnd.add(lineCount);		
-		Integer index = ifElseCondition.pop();
-		String previous = ind.get(index);
-		previous += " " + (lineCount + 1);
-		ind.set(index, previous);
-		lineCount++;
-	}
-
-	@Override
-	public void enterIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
+	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
+		numberOfIfElses.push(1 + numberOfIfElses.pop());
 	}
 
 	public void exitIfelseStatement(@NotNull EpsilonParser.IfelseStatementContext ctx) {
-		Integer count = ifElseCount.pop();
-		for(int i=0;i<count;i++){
-			Integer index = ifElseEnd.pop();
-			String previous = ind.get(index);
-			previous += " " + (lineCount);
-			ind.set(index, previous);			
+		int numberOfIfElse = numberOfIfElses.pop();
+		int i = 0;
+		while (i < numberOfIfElse) {
+			int elementAt = numberOfifElseEnd.pop();
+			String previousElement = list.get(elementAt);
+			previousElement += " " + (counter);
+			list.set(elementAt, previousElement);
+			i++;
 		}
 	}
-	
-	@Override
-	public void enterMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) { }
-	
-	@Override
-	public void exitMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) {
-		Integer count = ifElseCount.pop();
-		for(int i=0;i<count;i++){
-			Integer position = ifElseEnd.pop();
-			String previous = ind.get(position);
-			previous += " " + (lineCount);
-			ind.set(position, previous);
-	}
-	}
-	
-	@Override 
-	public void enterPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) { }
 
-
-	@Override 
+	@Override
 	public void exitPrefElseIf(@NotNull EpsilonParser.PrefElseIfContext ctx) {
-		ind.add("CONDFALSEGOTO");
-		ifElseCondition.push(lineCount);
-		lineCount++;
+		list.add("CONDFALSEGOTO");
+		numberOfifElseCondition.push(counter);
+		counter++;
 	}
-	
-	@Override 
-	public void enterIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
-		ifElseCount.push(1);
-	}
-	
-	@Override 
-	public void exitIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
-		lineCount++;
-		ind.add("PUSH True");		
-		ind.add("CONDTRUEGOTO");
-		ifElseEnd.add(lineCount);		
-		Integer index = ifElseCondition.pop();
-		String previous = ind.get(index);
-		previous += " " + (lineCount + 1);
-		ind.set(index, previous);
-		lineCount++;
-		}
-	
-	@Override 
-	public void enterElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
-		Integer cur = ifElseCount.pop();
-    	ifElseCount.push(1 + cur);
-	}
-	
-	@Override 
-	public void exitElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) { 
-		lineCount++;
-		ind.add("PUSH True");		
-		ifElseEnd.add(lineCount);
-		ind.add("CONDTRUEGOTO");
-		Integer index = ifElseCondition.pop();
-		String previous = ind.get(index);
-		previous += " " + (lineCount + 1);
-		ind.set(index, previous);
-		lineCount++;		
-	}
-	
+
 	@Override
-	public void enterPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
-	}
-
-
-	@Override 
 	public void exitPrefIf(@NotNull EpsilonParser.PrefIfContext ctx) {
-		ind.add("CONDFALSEGOTO");
-		ifElseCondition.push(lineCount);		
-		lineCount++;
-	}
-	
-	@Override 
-	public void enterElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) { }
-
-	@Override
-	public void exitElseStatement(@NotNull EpsilonParser.ElseStatementContext ctx) {
-	}
-
-	
-	@Override
-	public void enterMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
+		list.add("CONDFALSEGOTO");
+		numberOfifElseCondition.push(counter);
+		counter++;
 	}
 
 	@Override
-	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
-	}
-
-	@Override public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		loopStart.push(lineCount);
-	}
-	
-	
-	@Override
-	public void enterIdentifierDeclarationAssignment(
-			@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
-
-	}
-
-	@Override
-	public void exitIdentifierDeclarationAssignment(@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
-		lineCount++;
-		ind.add("SAVE " + ctx.IDENTIFIER());
+	public void exitIfStatement(@NotNull EpsilonParser.IfStatementContext ctx) {
+		counter++;
+		numberOfifElseEnd.add(counter);
+		Integer eleAt = numberOfifElseCondition.pop();
+		String prevElement = list.get(eleAt);
+		prevElement = prevElement + (" " + (counter + 1));
+		list.set(eleAt, prevElement);
+		list.add("PUSH True");
+		list.add("CONDTRUEGOTO");
+		counter++;
 	}
 
 	@Override
-	public void enterIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
-
+	public void exitElseIfStatement(@NotNull EpsilonParser.ElseIfStatementContext ctx) {
+		counter++;
+		Integer elementAt = numberOfifElseCondition.pop();
+		String previousElement = list.get(elementAt);
+		previousElement = previousElement + ( " " + (counter + 1));
+		list.set(elementAt, previousElement);
+		list.add("PUSH True");
+		numberOfifElseEnd.add(counter);
+		list.add("CONDTRUEGOTO");
+		counter++;
 	}
-	
+
+	// ------End of IF-ELSE IF-ELSE COnstruct -----------------
+
+	// ------While loop COnstruct--------------------------------
+	Stack<Integer> loopStart = new Stack<Integer>();
+	Stack<Integer> loopCondition = new Stack<Integer>();
 
 	@Override
-	public void exitIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
-		lineCount++;
-		ind.add("SAVE " + ctx.IDENTIFIER());
+	public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		loopStart.push(counter);
 	}
 
 	@Override
-	public void enterExpression(@NotNull EpsilonParser.ExpressionContext ctx) {
-
+	public void exitWhilePrefix(@NotNull EpsilonParser.WhilePrefixContext ctx) {
+		loopCondition.push(counter);
+		list.add("CONDFALSEGOTO");
+		counter++;
 	}
 
+	@Override
+	public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		counter++;
+		int elementAt = loopCondition.pop();
+		String priorElement = list.get(elementAt);
+		priorElement = priorElement + (" " + (counter + 1));
+		list.set(elementAt, priorElement);
+		list.add("PUSH True");
+		list.add("CONDTRUEGOTO " + loopStart.pop());
+		counter++;
+	}
+
+	// -------------------End of while loop construct------------------
+
+	// ---------------Expression Construct------------------------
 	@Override
 	public void exitExpression(@NotNull EpsilonParser.ExpressionContext ctx) {
 
-		if(ctx.NUMERIC()!= null){
-			lineCount++;
-			ind.add("PUSH "+ ctx.NUMERIC());
+		if (ctx.NUMERIC() != null) {
+			counter++;
+			list.add("PUSH " + ctx.NUMERIC());
 		}
-
-		if (ctx.FLOAT() != null){
-			lineCount++;
-			ind.add("PUSH "+ ctx.FLOAT());
+		if (ctx.FLOAT() != null) {
+			counter++;
+			list.add("PUSH " + ctx.FLOAT());
 		}
-
-		if(ctx.IDENTIFIER() != null) {
-			lineCount++;
-			ind.add("PUSH "+ ctx.IDENTIFIER());
-		}	
-		if(ctx.ADD() != null) {
-			lineCount++;
-			ind.add("ADD");
-		} 
+		if (ctx.IDENTIFIER() != null) {
+			counter++;
+			list.add("PUSH " + ctx.IDENTIFIER());
+		}
+		if (ctx.ADD() != null) {
+			counter++;
+			list.add("ADD");
+		}
 		if (ctx.SUB() != null) {
-			lineCount++;
-			ind.add("SUB");
-		} 
+			counter++;
+			list.add("SUB");
+		}
 		if (ctx.MUL() != null) {
-			lineCount++;
-			ind.add("MUL");
+			counter++;
+			list.add("MUL");
 		}
 		if (ctx.DIV() != null) {
-			lineCount++;
-			ind.add("DIV");
+			counter++;
+			list.add("DIV");
 		}
 		if (ctx.MODULO() != null) {
-			lineCount++;
-			ind.add("MOD");
+			counter++;
+			list.add("MOD");
 		}
 		if (ctx.POWER() != null) {
-			lineCount++;
-			ind.add("POW");
-		}	
+			counter++;
+			list.add("POW");
+		}
 
 	}
-
-	
-	@Override 
-	public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		lineCount++;
-		ind.add("PUSH True");		
-		ind.add("CONDTRUEGOTO " + loopStart.pop());
-		Integer index = loopCondition.pop();
-		String previous = ind.get(index);
-		previous += " " + (lineCount + 1);
-		ind.set(index, previous);
-		lineCount++;
-	}
-	
-	@Override 
-	public void exitWhilePrefix(@NotNull EpsilonParser.WhilePrefixContext ctx) {
-		loopCondition.push(lineCount);
-		ind.add("CONDFALSEGOTO");
-		lineCount++;
-	}
-
-	@Override public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
-		loopStart.push(lineCount);
-	}
-	
-	@Override
-	public void enterBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
-	}
-
+	//----------Boolean and comparators-----------------
 	@Override
 	public void exitBoolExpression(@NotNull EpsilonParser.BoolExpressionContext ctx) {
 		if (ctx.LOGICAND() != null) {
-			lineCount++;
-			ind.add("AND");
+			counter++;
+			list.add("AND");
 		} else if (ctx.LOGICNOT() != null) {
-			lineCount++;
-			ind.add("NOT");
+			counter++;
+			list.add("NOT");
 		} else if (ctx.LOGICOR() != null) {
-			lineCount++;
-			ind.add("OR");
+			counter++;
+			list.add("OR");
 		} else if (ctx.COMPARATORS() != null) {
 			switch (ctx.COMPARATORS().toString()) {
 			case ">":
-				lineCount++;
-				ind.add("GREATER");
+				counter++;
+				list.add("GREATER");
 				break;
 			case "<":
-				lineCount++;
-				ind.add("LESSER");
+				counter++;
+				list.add("LESSER");
 				break;
 			case ">=":
-				lineCount++;
-				ind.add("GREATEREQUAL");
+				counter++;
+				list.add("GREATEREQUAL");
 				break;
 			case "<=":
-				lineCount++;
-				ind.add("LESSEREQUAL");
+				counter++;
+				list.add("LESSEREQUAL");
 				break;
 			case "=":
-				lineCount++;
-				ind.add("EQUALS");
+				counter++;
+				list.add("EQUALS");
 				break;
 			}
 		}
 	}
 
-	@Override
-	public void enterMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) { 
-		
-		lineCount++;
-		ind.add("DEFN main");
-	}
-	
-	@Override 
-	public void exitMainDefinitionDeclaration(@NotNull EpsilonParser.MainDefinitionDeclarationContext ctx) {
-		lineCount++;
-		ind.add("EXITDEFN main");
-	}
-	
-	
 }
