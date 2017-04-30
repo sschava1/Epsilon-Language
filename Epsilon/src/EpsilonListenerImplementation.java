@@ -97,10 +97,20 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	@Override
 	public void enterMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
+		ifElseCount.push(1);
 	}
 
 	@Override
 	public void exitMainIfStatement(@NotNull EpsilonParser.MainIfStatementContext ctx) {
+		lineCount++;
+		ind.add("PUSH True");		
+		ind.add("CONDTRUEGOTO");
+		ifElseEnd.add(lineCount);		
+		Integer pos = ifElseCondition.pop();
+		String prev = ind.get(pos);
+		prev += " " + (lineCount + 1);
+		ind.set(pos, prev);
+		lineCount++;
 	}
 
 	@Override
@@ -115,6 +125,20 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 			prev += " " + (lineCount);
 			ind.set(pos, prev);			
 		}
+	}
+	
+	@Override
+	public void enterMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) { }
+	
+	@Override
+	public void exitMainIfElseStatement(@NotNull EpsilonParser.MainIfElseStatementContext ctx) {
+		Integer count = ifElseCount.pop();
+		for(int i=0;i<count;i++){
+			Integer pos = ifElseEnd.pop();
+			String prev = ind.get(pos);
+			prev += " " + (lineCount);
+			ind.set(pos, prev);
+	}
 	}
 	
 	@Override 
@@ -193,6 +217,15 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void exitMainElseStatement(@NotNull EpsilonParser.MainElseStatementContext ctx) {
 	}
 
+	@Override public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+	}
+	
+	
+	@Override public void enterMainWhileIterator(@NotNull EpsilonParser.MainWhileIteratorContext ctx) {
+		loopStart.push(lineCount);
+		}
+
 	@Override
 	public void enterIdentifierDeclarationAssignment(
 			@NotNull EpsilonParser.IdentifierDeclarationAssignmentContext ctx) {
@@ -209,6 +242,7 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	public void enterIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
 
 	}
+	
 
 	@Override
 	public void exitIdentifierAssignment(@NotNull EpsilonParser.IdentifierAssignmentContext ctx) {
@@ -265,10 +299,6 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	}
 
-	@Override 
-	public void enterWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
-		loopStart.push(lineCount);
-	}
 	
 	@Override 
 	public void exitWhileIterator(@NotNull EpsilonParser.WhileIteratorContext ctx) {
