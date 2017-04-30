@@ -3,6 +3,7 @@ import java.util.*;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
+
 public class EpsilonListenerImplementation extends EpsilonBaseListener {
 
 	int mainCnt = 0;
@@ -142,7 +143,31 @@ public class EpsilonListenerImplementation extends EpsilonBaseListener {
 	@Override
 	public void exitDefinitionInvocation(@NotNull EpsilonParser.DefinitionInvocationContext ctx) {
 		counter += 1;
+		List<EpsilonParser.ParametersContext> paramContextList = ctx.parameters();
+		for(EpsilonParser.ParametersContext paramContext : paramContextList){
+			if(paramContext.IDENTIFIER() != null){
+				
+				counter += 1;
+				list.add("PARAM " + paramContext.IDENTIFIER());
+			}
+				
+			else if (paramContext.NUMERIC() != null){
+				
+				counter += 1;
+				list.add("PARAM " + paramContext.NUMERIC());
+			}
+				
+			else if (paramContext.STRING() != null){
+				counter += 1;
+				list.add("PARAM " + paramContext.STRING());
+			}
+				
+		} 
+		counter += 1;
 		list.add("INVOKE " + ctx.IDENTIFIER());
+		
+
+	
 	}
 	// ------------------End of function construct------------
 
