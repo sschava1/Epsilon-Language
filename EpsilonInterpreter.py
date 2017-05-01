@@ -35,7 +35,7 @@ class EpsilonInterpreter:
                 #self.instruction_pointer += 1
                 if opcode == "DEFN":
                     def_description = DefinitionDescription()
-                    print("Enter definition: "+statement[1])
+                    #print("Enter definition: "+statement[1])
                     def_description.def_name = statement[1]
                     def_description.def_start_location = self.instruction_pointer
                     self.instruction_pointer += 1
@@ -43,44 +43,44 @@ class EpsilonInterpreter:
                     statement = statement.split()
                     opcode = statement[0]
 
-                    if opcode != "SAVE":
-                        print("Definition "+ def_description.def_name+ " does not have any parameters")
+                    #if opcode != "SAVE":
+                        #print("Definition "+ def_description.def_name+ " does not have any parameters")
 
                     parameter_count = 0
                     while opcode == "SAVE":
                         parameter_count += 1
                         def_parameter = statement[1]
-                        print("SAVE "+ str(def_parameter))
+                        #print("SAVE "+ str(def_parameter))
                         def_description.symbol_values[def_parameter] = None
                         self.instruction_pointer += 1
                         statement = self.intermediate_code[self.instruction_pointer]
                         statement = statement.split()
                         opcode = statement[0]
 
-                    print("parameter_count for "+def_description.def_name+" : "+str(parameter_count))
+                    #print("parameter_count for "+def_description.def_name+" : "+str(parameter_count))
                     def_description.number_of_parameters = parameter_count
                     self.runtime.definition_description.append(def_description)
-                    print("line_no: " + str(self.instruction_pointer) + " , opcode: " + str(opcode))
+                    #print("line_no: " + str(self.instruction_pointer) + " , opcode: " + str(opcode))
                     while opcode != "EXITDEFN":
                         self.instruction_pointer += 1
                         statement = self.intermediate_code[self.instruction_pointer]
                         statement = statement.split()
                         opcode = statement[0]
-                        print("line_no: "+str(self.instruction_pointer) +" , opcode: "+str(opcode))
+                        #print("line_no: "+str(self.instruction_pointer) +" , opcode: "+str(opcode))
                     self.instruction_pointer += 1
-                    print("Line number after definition exit : "+str(self.instruction_pointer))
+                    #print("Line number after definition exit : "+str(self.instruction_pointer))
 
                 if opcode == "EXIT":
                     break
             else:
                 self.instruction_pointer += 1
 
-        print("Total Definitions: "+ str(len(self.runtime.definition_description)))
-        for def_desc_obj in self.runtime.definition_description:
-            print("Definition Name: "+def_desc_obj.def_name)
-            print("Definition Start Location: "+str(def_desc_obj.def_start_location))
-            print("Definition Number of Parameters: "+str(def_desc_obj.number_of_parameters))
-            print("Definition Symbol Values: "+str(def_desc_obj.symbol_values))
+        #print("Total Definitions: "+ str(len(self.runtime.definition_description)))
+        #for def_desc_obj in self.runtime.definition_description:
+            #print("Definition Name: "+def_desc_obj.def_name)
+            #print("Definition Start Location: "+str(def_desc_obj.def_start_location))
+            #print("Definition Number of Parameters: "+str(def_desc_obj.number_of_parameters))
+            #print("Definition Symbol Values: "+str(def_desc_obj.symbol_values))
 
     def run(self):
         print("Inside Run")
@@ -97,16 +97,16 @@ class EpsilonInterpreter:
         if main_defined == False:
             print("Program should contain a 'main' definition")
         else:
-            print("Program contains a 'main' definition")
+            #print("Program contains a 'main' definition")
             self.execution_pointer += 1
-            print("Execution Pointer: "+str(self.execution_pointer))
+            #print("Execution Pointer: "+str(self.execution_pointer))
             while self.execution_pointer < self.total_lines_of_code:
                 statement = self.intermediate_code[self.execution_pointer]
                 statement = statement.split()
                 opcode = statement[0]
-                print("opcode : "+opcode)
+                #print("opcode : "+opcode)
                 if opcode == "PUSH":
-                    print("PUSH "+str(statement[1]))
+                    #print("PUSH "+str(statement[1]))
                     self.runtime.definition_description[current_definition].local_stack.append(statement[1])
                     self.execution_pointer += 1
 
@@ -117,7 +117,7 @@ class EpsilonInterpreter:
                     elif len(self.runtime.return_list) > 0:
                         value = self.runtime.return_list.pop()
 
-                    print("variable: "+variable+" , value: "+str(value))
+                    #print("variable: "+variable+" , value: "+str(value))
 
                     if value in self.runtime.definition_description[current_definition].symbol_values:
                         value = self.runtime.definition_description[current_definition].symbol_values[value]
@@ -131,12 +131,12 @@ class EpsilonInterpreter:
                         value = self.runtime.definition_description[current_definition].symbol_values.get(value)
                     self.runtime.return_list.append(value)
 
-                    print("Definition: " + self.runtime.definition_description[current_definition].def_name)
+                    #print("Definition: " + self.runtime.definition_description[current_definition].def_name)
                     call_stack_obj = self.runtime.call_stack.pop()
                     self.execution_pointer = call_stack_obj['ep']
                     current_definition = call_stack_obj['def_id']
 
-                    print("execution_pointer: " + str(self.execution_pointer) + " , current_definition: " + str(current_definition))
+                    #print("execution_pointer: " + str(self.execution_pointer) + " , current_definition: " + str(current_definition))
 
 
                 elif opcode == "PARAM":
@@ -148,20 +148,20 @@ class EpsilonInterpreter:
 
                 elif opcode == "CONDFALSEGOTO":
                     check = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print("check: "+str(check))
+                    #print("check: "+str(check))
                     if check == 'False' or check == False:
                         value = statement[1]
-                        print("CONDFALSEGOTO: "+value)
+                        #print("CONDFALSEGOTO: "+value)
                         self.execution_pointer = int(value)
                     else:
                         self.execution_pointer += 1
 
                 elif opcode == "CONDTRUEGOTO":
                     check = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print("check: "+str(check))
+                    #print("check: "+str(check))
                     if check == 'True' or check == True:
                         value = statement[1]
-                        print("CONDTRUEGOTO: "+str(value))
+                       # print("CONDTRUEGOTO: "+str(value))
                         self.execution_pointer = int(value)
                     else:
                         self.execution_pointer += 1
@@ -191,44 +191,44 @@ class EpsilonInterpreter:
 
                     number_of_parameters = self.runtime.definition_description[current_definition].number_of_parameters
                     param_number = 0
-                    print("Definition Name: "+self.runtime.definition_description[current_definition].def_name)
-                    print("Number of Parameters: "+ str(self.runtime.definition_description[current_definition].number_of_parameters))
+                    #print("Definition Name: "+self.runtime.definition_description[current_definition].def_name)
+                    #print("Number of Parameters: "+ str(self.runtime.definition_description[current_definition].number_of_parameters))
                     while param_number < number_of_parameters:
                         value = self.runtime.param_list.pop()
-                        print("value: "+str(value))
+                        #print("value: "+str(value))
                         statement = self.intermediate_code[self.execution_pointer]
                         statement = statement.split()
                         opcode = statement[0]
                         if opcode != 'SAVE':
-                            print ('Parameters mismatch')
+                            #print ('Parameters mismatch')
                             sys.exit()
                         else:
                             variable = statement[1]
-                            print("Variable: "+variable)
+                            #print("Variable: "+variable)
                             self.runtime.definition_description[current_definition].symbol_values[variable] = value
-                            print("Updated Symbol Table : "+ str(self.runtime.definition_description[current_definition].symbol_values))
-                            print("Call Stack: "+str(self.runtime.call_stack))
+                            #print("Updated Symbol Table : "+ str(self.runtime.definition_description[current_definition].symbol_values))
+                            #print("Call Stack: "+str(self.runtime.call_stack))
                             self.execution_pointer += 1
                             param_number += 1
 
-                        print("execution_pointer: "+str(self.execution_pointer))
+                        #print("execution_pointer: "+str(self.execution_pointer))
 
                     #sys.exit()
 
                 elif opcode == "ADD":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print ("OP1----"+str(operand1))
-                    print ("OP2----"+str(operand2))
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print ("OP1----"+str(operand1))
+                    #print ("OP2----"+str(operand2))
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
                         operand2 = self.runtime.definition_description[current_definition].symbol_values.get(operand2)
-                    print ("OP1--c--" + str(operand1))
-                    print ("OP2--c--" + str(operand2))
+                    #print ("OP1--c--" + str(operand1))
+                    #print ("OP2--c--" + str(operand2))
                     output = int(operand1) + int(operand2)
-                    print ("OPp----"+str(output))
+                    #print ("OPp----"+str(output))
 
                     self.runtime.definition_description[current_definition].local_stack.append(output)
                     self.execution_pointer += 1
@@ -253,7 +253,7 @@ class EpsilonInterpreter:
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
                         operand2 = self.runtime.definition_description[current_definition].symbol_values.get(operand2)
-                    print("operand1: "+str(operand1)+" ,  operand2: "+str(operand2))
+                    #print("operand1: "+str(operand1)+" ,  operand2: "+str(operand2))
                     output = int(operand1) * int(operand2)
                     self.runtime.definition_description[current_definition].local_stack.append(output)
                     self.execution_pointer += 1
@@ -261,7 +261,7 @@ class EpsilonInterpreter:
                 elif opcode == "DIV":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -314,16 +314,16 @@ class EpsilonInterpreter:
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
                         operand2 = self.runtime.definition_description[current_definition].symbol_values.get(operand2)
                     output = int(operand2) < int(operand1)
-                    print("Operand2: "+str(operand2))
-                    print("Operand1: "+str(operand1))
-                    print("LESSER: "+str(output))
+                    #print("Operand2: "+str(operand2))
+                    #print("Operand1: "+str(operand1))
+                    #print("LESSER: "+str(output))
                     self.runtime.definition_description[current_definition].local_stack.append(output)
                     self.execution_pointer += 1
 
                 elif opcode == "GREATEREQUAL":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -335,7 +335,7 @@ class EpsilonInterpreter:
                 elif opcode == "LESSEREQUAL":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                   # print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -347,7 +347,7 @@ class EpsilonInterpreter:
                 elif opcode == "EQUALS":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                   # print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -359,7 +359,7 @@ class EpsilonInterpreter:
                 elif opcode == "UNEQUALS":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                   # print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -371,7 +371,7 @@ class EpsilonInterpreter:
                 elif opcode == "AND":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                   # print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -383,7 +383,7 @@ class EpsilonInterpreter:
                 elif opcode == "OR":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                   # print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -395,25 +395,25 @@ class EpsilonInterpreter:
                 elif opcode == "EXITDEFN":
                     if self.runtime.definition_description[current_definition].def_name == 'main':
                         self.execution_pointer += 1
-                        print("Definition: "+self.runtime.definition_description[current_definition].def_name)
+                      #  print("Definition: "+self.runtime.definition_description[current_definition].def_name)
                     else:
-                        print("Definition: "+self.runtime.definition_description[current_definition].def_name)
+                      #  print("Definition: "+self.runtime.definition_description[current_definition].def_name)
                         call_stack_obj = self.runtime.call_stack.pop()
                         self.execution_pointer = call_stack_obj['ep']
                         current_definition = call_stack_obj['def_id']
 
-                        print("execution_pointer: "+str(self.execution_pointer)+ " , current_definition: "+str(current_definition))
+                        #print("execution_pointer: "+str(self.execution_pointer)+ " , current_definition: "+str(current_definition))
                 else:
                     self.execution_pointer += 1
 
 
 
-            print("Total Definitions: " + str(len(self.runtime.definition_description)))
-            for def_desc_obj in self.runtime.definition_description:
-                print("Definition Name: " + def_desc_obj.def_name)
-                print("Definition Start Location: " + str(def_desc_obj.def_start_location))
-                print("Definition Number of Parameters: " + str(def_desc_obj.number_of_parameters))
-                print("Definition Symbol Values: " + str(def_desc_obj.symbol_values))
+            #print("Total Definitions: " + str(len(self.runtime.definition_description)))
+            #for def_desc_obj in self.runtime.definition_description:
+                #print("Definition Name: " + def_desc_obj.def_name)
+                #print("Definition Start Location: " + str(def_desc_obj.def_start_location))
+                #print("Definition Number of Parameters: " + str(def_desc_obj.number_of_parameters))
+                #print("Definition Symbol Values: " + str(def_desc_obj.symbol_values))
 
 test_file = open('intermediate.epsi')
 testing = test_file.read()
