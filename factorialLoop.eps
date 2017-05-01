@@ -1,0 +1,13 @@
+defn fact(var n){
+	var i := 1
+	var ans := 1
+	loop(i <= n){
+		ans := ans * i
+		i := i + 1
+	}
+	return ans
+}
+
+defn main(){
+  fact(5)
+}
