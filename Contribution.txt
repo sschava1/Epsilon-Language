@@ -1,0 +1,32 @@
+Contribution
+--------------------
+Grammar Implementation
+	
+Branching Grammar: Shirish
+	
+Iterative Grammar: Prateek
+	
+Functions Grammar: Chiraag
+	
+Expression, Construct, Terminals: Pranjal
+
+Documentation:
+
+
+Video: All
+Powerpoint Presentation : All
+Design Document:
+Language features, grammar specifications, compiler diagram: Shirish, Chiraag
+
+Grammar G4 format, Sample programs, Parse trees diagram: Prateek, Pranjal
+
+
+BrainStorm on execution plan >> All
+Intermediate Code Generation ---> 
+Listener Implementation >> Pranjal, Prateek
+
+Runner Implementation >> Prateek, Shirish
+
+Interpreter Implmetation >> Chiraag, Pranjal, Prateek, Shirish
+
+Reading Program Files into Interpreter >> Shirish, Prateek

@@ -1,0 +1,22 @@
+defn getMaximum(var a, var b, var c){
+	max := 0
+	if(a >= b){
+		if(a >= c){
+			max := a
+		}
+	}else if(b >= a){
+		if(b >= c){
+			max := b
+		}
+	}else{
+		max := c
+	}
+	return max
+}
+defn main(){
+	a := 3
+	b := 2
+	c := 6
+	max := getMaximum(a, b, c)
+	print(max)
+}
