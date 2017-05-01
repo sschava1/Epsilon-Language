@@ -79,3 +79,24 @@ else if(a+b/2 > 10+20*15){
 	c := 10
 }
 }
+
+//calculator
+
+defn add(var a,var b){
+print(a+b)
+}
+
+defn multiply(var a,var b){
+print(a*b)
+}
+
+defn divide(var a,var b){
+print(a/b)
+}
+
+defn main(){
+add(2,3)
+multiply(3,5)
+divide(8,2)
+}
+
