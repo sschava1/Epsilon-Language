@@ -83,7 +83,7 @@ class EpsilonInterpreter:
             #print("Definition Symbol Values: "+str(def_desc_obj.symbol_values))
 
     def run(self):
-        print("Inside Run")
+        #print("Inside Run")
         main_defined = False
         self.execution_pointer = 0
         current_definition = 0
@@ -236,7 +236,7 @@ class EpsilonInterpreter:
                 elif opcode == "SUB":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -248,7 +248,7 @@ class EpsilonInterpreter:
                 elif opcode == "MUL":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -273,7 +273,7 @@ class EpsilonInterpreter:
                 elif opcode == "POW":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -285,7 +285,7 @@ class EpsilonInterpreter:
                 elif opcode == "MOD":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -296,7 +296,7 @@ class EpsilonInterpreter:
                 elif opcode == "GREATER":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
@@ -308,7 +308,7 @@ class EpsilonInterpreter:
                 elif opcode == "LESSER":
                     operand1 = self.runtime.definition_description[current_definition].local_stack.pop()
                     operand2 = self.runtime.definition_description[current_definition].local_stack.pop()
-                    print (self.runtime.definition_description[current_definition].symbol_values)
+                    #print (self.runtime.definition_description[current_definition].symbol_values)
                     if(operand1 in self.runtime.definition_description[current_definition].symbol_values):
                         operand1 = self.runtime.definition_description[current_definition].symbol_values.get(operand1)
                     if (operand2 in self.runtime.definition_description[current_definition].symbol_values):
