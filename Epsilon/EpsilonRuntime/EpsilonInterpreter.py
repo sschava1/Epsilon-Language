@@ -443,8 +443,7 @@ class EpsilonInterpreter:
 # "EXITDEFN main",
 # "EXIT"]
 
-print "Enter the filename:"
-test_file = open(raw_input(), "r")
+test_file = open('intermediate.epsi')
 testing = test_file.read()
 intermediate_code = testing.split('\n')
 intermediate_code.insert(0, "")

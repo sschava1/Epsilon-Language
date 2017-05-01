@@ -52,7 +52,7 @@ public class EpsilonRunner {
 		walker.walk(listener, tree); 
 		
 		try {
-			PrintWriter writer = new PrintWriter("intermediate.eps", "UTF-8");
+			PrintWriter writer = new PrintWriter("EpsilonRuntime/intermediate.epsi", "UTF-8");
 			for (int i = 1; i < listener.list.size(); i++) {
 				writer.println(listener.list.get(i));
 			}
